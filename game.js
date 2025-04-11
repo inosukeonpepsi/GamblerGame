@@ -1,134 +1,151 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Casino Guessing Game</title>
-  <style>
-    body {
-      background: #1a1a1a;
-      color: #fff;
-      font-family: 'Arial', sans-serif;
-      text-shadow: 0 0 10px rgba(255,255,255,0.3);
-    }
-    .container {
-      display: flex;
-      gap: 40px;
-      padding: 20px;
-    }
-    button {
-      background: #cc0000;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      text-transform: uppercase;
-      font-weight: bold;
-      box-shadow: 0 0 15px rgba(204,0,0,0.3);
-      transition: all 0.3s ease;
-    }
-    button:hover {
-      background: #ff0000;
-      transform: scale(1.05);
-    }
-    input {
-      background: #333;
-      color: white;
-      border: 1px solid #666;
-      padding: 8px;
-      border-radius: 4px;
-    }
-    h1, h2, h3 {
-      color: #ffcc00;
-      text-transform: uppercase;
-    }
-    .game {
-      flex: 1;
-    }
-    .slots {
-      width: 200px;
-      padding: 20px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .wheel {
-      font-size: 40px;
-      margin: 20px 0;
-      font-family: monospace;
-      display: flex;
-      gap: 10px;
-    }
-    .reel {
-      font-size: 30px;
-    }
-    #spinButton {
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #spinButton:disabled {
-      background: #cccccc;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="game">
-      <h1>Number Guessing Game</h1>
-      <div id="ascensionContainer" style="margin-bottom: 15px;">
-        <button onclick="ascend()" id="ascendButton" style="background: #ffcc00; font-size: 20px; display: none;">🌟 Ascend (Requires 1000 points)</button>
-        <p id="multiplierDisplay" style="color: #ffcc00;">Wins Multiplier: 1x</p>
-      </div>
-      <p id="score">Total Score: 0 💰 | Numbers Guessed: 0</p>
-      <p id="range">Guess a number between 1 and 100 (You have 10 guesses):</p>
-      <input type="number" id="guessInput">
-      <button onclick="guessNumber()">Guess</button>
-      <p id="result"></p>
-    </div>
-    <div class="slots">
-      <h3>Guess Gambler</h3>
-      <input type="number" id="betAmount" min="10" placeholder="Bet amount (min 10)" style="width: 120px; margin-bottom: 10px;">
-      <div class="wheel" id="wheel">
-        <span class="reel"></span>
-        <span class="reel"></span>
-        <span class="reel"></span>
-      </div>
-      <button id="spinButton" onclick="spinWheel()" disabled>Spin</button>
-    </div>
-  </div>
-  <div style="margin-top: 30px; border-top: 2px solid #ccc; padding-top: 20px; display: flex; gap: 20px;">
-    <div style="flex: 3;">
-      <h2>Blackjack Gambler</h2>
-      <div style="display: flex; gap: 20px;">
-        <div>
-          <h3>Your Hand: <span id="playerCards"></span></h3>
-          <p>Total: <span id="playerTotal">0</span></p>
+
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send(`<!DOCTYPE html>
+    <html>
+    <head>
+      <title>Casino Guessing Game</title>
+    </head>
+    <style>
+      body {
+        background: #1a1a1a;
+        color: #fff;
+        font-family: 'Arial', sans-serif;
+        text-shadow: 0 0 10px rgba(255,255,255,0.3);
+      }
+      .container {
+        display: flex;
+        gap: 40px;
+        padding: 20px;
+      }
+      button {
+        background: #cc0000;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+        box-shadow: 0 0 15px rgba(204,0,0,0.3);
+        transition: all 0.3s ease;
+      }
+      button:hover {
+        background: #ff0000;
+        transform: scale(1.05);
+      }
+      input {
+        background: #333;
+        color: white;
+        border: 1px solid #666;
+        padding: 8px;
+        border-radius: 4px;
+      }
+      h1, h2, h3 {
+        color: #ffcc00;
+        text-transform: uppercase;
+      }
+      .game {
+        flex: 1;
+      }
+      .slots {
+        width: 200px;
+        padding: 20px;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        text-align: center;
+      }
+      .wheel {
+        font-size: 40px;
+        margin: 20px 0;
+        font-family: monospace;
+        display: flex;
+        gap: 10px;
+      }
+      .reel {
+        font-size: 30px;
+      }
+      #spinButton {
+        background: #ff4444;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #spinButton:disabled {
+        background: #cccccc;
+      }
+    </style>
+    <body>
+      <div class="container">
+        <div class="game">
+          <h1>Number Guessing Game</h1>
+          <div id="ascensionContainer" style="margin-bottom: 15px;">
+            <button onclick="ascend()" id="ascendButton" style="background: #ffcc00; font-size: 20px; display: none;">🌟 Ascend (Requires 1000 points)</button>
+            <p id="multiplierDisplay" style="color: #ffcc00;">Wins Multiplier: 1x</p>
+          </div>
+          <p id="score">Total Score: 0 💰 | Numbers Guessed: 0</p>
+          <p id="range">Guess a number between 1 and 100 (You have 10 guesses):</p>
+          <input type="number" id="guessInput">
+          <button onclick="guessNumber()">Guess</button>
+          <p id="result"></p>
         </div>
-        <div>
-          <h3>Dealer's Hand: <span id="dealerCards"></span></h3>
-          <p>Total: <span id="dealerTotal">0</span></p>
+        <div class="slots">
+          <h3>Guess Gambler</h3>
+          <input type="number" id="betAmount" min="10" placeholder="Bet amount (min 10)" style="width: 120px; margin-bottom: 10px;">
+          <div class="wheel" id="wheel">
+            <span class="reel"></span>
+            <span class="reel"></span>
+            <span class="reel"></span>
+          </div>
+          <button id="spinButton" onclick="spinWheel()" disabled>Spin</button>
         </div>
       </div>
-      <input type="number" id="blackjackBet" min="10" placeholder="Bet amount (min 10)" style="width: 120px; margin-right: 10px;">
-      <button id="dealButton" onclick="startBlackjack()">Deal</button>
-      <button id="hitButton" onclick="hit()" style="display: none;">Hit</button>
-      <button id="standButton" onclick="stand()" style="display: none;">Stand</button>
-      <p id="blackjackResult"></p>
-      <button onclick="resetGame()" style="margin-top: 10px;">Reset Game</button>
-    </div>
-    <div style="flex: 1; border-left: 2px solid #ccc; padding-left: 20px;">
-      <h2>Shop</h2>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <button onclick="buyGuesses(1)" style="padding: 5px;">Buy 1 Guess (25 points)</button>
-        <button onclick="buyGuesses(5)" style="padding: 5px;">Buy 5 Guesses (100 points)</button>
-        <button onclick="buyGuesses(10)" style="padding: 5px;">Buy 10 Guesses (175 points)</button>
+      <div style="margin-top: 30px; border-top: 2px solid #ccc; padding-top: 20px; display: flex; gap: 20px;">
+        <div style="flex: 3;">
+          <h2>Blackjack Gambler</h2>
+          <div style="display: flex; gap: 20px;">
+            <div>
+              <h3>Your Hand: <span id="playerCards"></span></h3>
+              <p>Total: <span id="playerTotal">0</span></p>
+            </div>
+            <div>
+              <h3>Dealer's Hand: <span id="dealerCards"></span></h3>
+              <p>Total: <span id="dealerTotal">0</span></p>
+            </div>
+          </div>
+          <input type="number" id="blackjackBet" min="10" placeholder="Bet amount (min 10)" style="width: 120px; margin-right: 10px;">
+          <button id="dealButton" onclick="startBlackjack()">Deal</button>
+          <button id="hitButton" onclick="hit()" style="display: none;">Hit</button>
+          <button id="standButton" onclick="stand()" style="display: none;">Stand</button>
+          <p id="blackjackResult"></p>
+          <button onclick="resetGame()" style="margin-top: 10px;">Reset Game</button>
+        </div>
+        <div style="flex: 1; border-left: 2px solid #ccc; padding-left: 20px;">
+          <h2>Shop</h2>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button onclick="buyGuesses(1)" style="padding: 5px;">Buy 1 Guess (25 points)</button>
+            <button onclick="buyGuesses(5)" style="padding: 5px;">Buy 5 Guesses (100 points)</button>
+            <button onclick="buyGuesses(10)" style="padding: 5px;">Buy 10 Guesses (175 points)</button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <script>
+      <script>
+        ${getScriptContent()}
+      </script>
+    </body>
+    </html>`);
+});
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+
+function getScriptContent() {
+  return `
     // Blackjack game variables
     let deck = [];
     let playerHand = [];
@@ -442,7 +459,5 @@
         startTime = Date.now();
       }
     }
-    let score = 0;
-  </script>
-</body>
-</html>
+  `;
+}
